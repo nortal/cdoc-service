@@ -1,0 +1,49 @@
+buildscript {
+  ext {
+    springBootVersion = '2.0.4.RELEASE'
+  }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  }
+}
+
+plugins {
+  id 'war'
+}
+
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+ext {
+  springCloudVersion = 'Finchley.SR1'
+}
+
+dependencies {
+  compile project(':cdoc-service-common')
+  compile project(':cdoc-service-core')
+
+  compile("org.springframework.boot:spring-boot-starter-web")
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+  providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+  compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+}
+
+def appProps = new Properties()
+file('src/main/resources/application.properties').withInputStream { appProps.load(it) }
+
+bootWar {
+  classifier = 'boot'
+}
+
+springBoot {
+  buildInfo()
+}
+
+war {
+  enabled = true
+  archiveName = "${baseName}##1.${extension}"
+}

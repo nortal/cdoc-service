@@ -1,0 +1,19 @@
+subprojects {
+  apply plugin: 'java'
+
+  group = 'com.nortal.cdoc'
+  sourceCompatibility = 1.8
+
+  task jarSources(type:Jar){
+    from sourceSets.main.allSource
+    classifier = 'source'
+  }
+
+  dependencies {
+  }
+
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+}
