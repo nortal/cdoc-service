@@ -10,7 +10,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
@@ -20,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -74,7 +74,7 @@ public class CdocServiceClient {
     private String fileName;
 
     public CdocServiceResource(CdocServiceFile file) throws IOException {
-      super(IOUtils.toByteArray(file.getContent()));
+      super(StreamUtils.copyToByteArray(file.getContent()));
       this.fileName = file.getName();
     }
 
