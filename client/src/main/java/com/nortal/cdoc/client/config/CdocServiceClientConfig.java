@@ -1,6 +1,7 @@
 package com.nortal.cdoc.client.config;
 
 import com.nortal.cdoc.client.consumer.CdocServiceClient;
+import com.nortal.cdoc.client.consumer.CdocServiceErrorHandler;
 import java.util.Arrays;
 import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class CdocServiceClientConfig {
         new RestTemplate(Arrays.asList(new FormHttpMessageConverter(),
                                        new ResourceHttpMessageConverter(),
                                        new ByteArrayHttpMessageConverter()));
+    rt.setErrorHandler(new CdocServiceErrorHandler());
 
     SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
     rf.setConnectTimeout(env.getProperty("cdoc.service.app.connect.timeout", Integer.class, 0));

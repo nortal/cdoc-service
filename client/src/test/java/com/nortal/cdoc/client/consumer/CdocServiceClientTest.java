@@ -32,7 +32,6 @@ public class CdocServiceClientTest {
       Assert.assertTrue(cdoc.getSize() > 0);
       Assert.assertNotNull(cdoc.getContent());
     } catch (Exception e) {
-      e.printStackTrace();
       Assert.fail();
     }
   }
