@@ -57,6 +57,8 @@ public class CdocServiceClient {
       ResponseEntity<byte[]> rsp =
           cdocServiceRestTemplate.postForEntity(getUri(cdocServiceAppUrl, "api/create-cdoc"), req, byte[].class);
       return new CdocServiceFile(null, rsp.getBody());
+    } catch(CdocServiceException e) {
+      throw e;
     } catch (Exception e) {
       throw new CdocServiceException(CdocServiceErrorCode.UNEXPECTED_ERROR, e);
     }

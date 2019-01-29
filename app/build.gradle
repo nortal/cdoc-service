@@ -18,10 +18,6 @@ apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-ext {
-  springCloudVersion = 'Finchley.SR1'
-}
-
 dependencies {
   compile project(':cdoc-service-common')
   compile project(':cdoc-service-core')
@@ -45,5 +41,4 @@ springBoot {
 
 war {
   enabled = true
-  archiveName = "${baseName}##1.${extension}"
 }

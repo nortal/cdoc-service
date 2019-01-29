@@ -1,5 +1,5 @@
 include 'common', 'core', 'app', 'client'
 
 rootProject.children.each {
-	it.name = 'cdoc-service-' + it.name
+  it.name = 'cdoc-service-' + it.name
 }
