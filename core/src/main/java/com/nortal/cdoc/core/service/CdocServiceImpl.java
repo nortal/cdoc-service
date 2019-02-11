@@ -41,7 +41,8 @@ public class CdocServiceImpl implements CdocService {
 
     LOG.info(String.format("creating cdoc to recipients=%s with files=%s",
                            StringUtils.join(data.getRecipents(), ", "),
-                           StringUtils.join(data.getFiles().stream().map(CdocServiceFile::getName).collect(Collectors.toList()), ", ")));
+                           StringUtils.join(data.getFiles().stream().map(CdocServiceFile::getName).collect(Collectors.toList()),
+                                            ", ")));
 
     ByteArrayOutputStream cdocContent = new ByteArrayOutputStream();
     try {
@@ -61,10 +62,12 @@ public class CdocServiceImpl implements CdocService {
 
   private ByteArrayInputStream getRecipentCert(String recipent) {
     LdapQuery query =
-        LdapQueryBuilder.query().base(LdapNameBuilder.newInstance().add("o",
-                                                                        "ESTEID").add("ou",
-                                                                                      "authentication").build()).attributes("userCertificate;binary").filter("serialNumber={0}",
-                                                                                                                                                             recipent);
+        LdapQueryBuilder.query().base(LdapNameBuilder.newInstance().add("dc",
+                                                                        "ESTEID").add("o",
+                                                                                      "Identity card of Estonian citizen").add("ou",
+                                                                                                                               "Authentication").build()).attributes("userCertificate;binary").filter("serialNumber=PNOEE-{0}",
+                                                                                                                                                                                                      recipent);
+
     List<ByteArrayInputStream> certs = cdocLdapTemplate.search(query, new AttributesMapper<ByteArrayInputStream>() {
       @Override
       public ByteArrayInputStream mapFromAttributes(Attributes attributes) throws NamingException {
@@ -84,7 +87,9 @@ public class CdocServiceImpl implements CdocService {
   }
 
   private List<DataFile> getDataFiles(CdocServiceData data) {
-    return data.getFiles().stream().map(f -> new DataFile(f.getName(), f.getContent(), f.getSize())).collect(Collectors.toList());
+    return data.getFiles().stream().map(f -> new DataFile(f.getName(),
+                                                          f.getContent(),
+                                                          f.getSize())).collect(Collectors.toList());
   }
 
 }
