@@ -14,8 +14,9 @@ Contains CDOC service models, errors and models validation utility.
 Contains CDOC creation service which creates CDOC container according to provided files and recipients certificates queried from [SK](https://www.sk.ee/repositoorium/ldap/esteid-ldap-kataloogi-kasutamine/).
 
 Service errors:
+
 | Error code | Description |
-| ------------- | ----------- |
+| :--- | :--- |
 | MISSING_CDOC_DATA | No input were provided for service |
 | MISSING_CDOC_RECIPIENTS | No recipients were provided for service |
 | INVALID_CDOC_RECIPIENT | Invalid recipient identity code or certificate is missing |
@@ -25,8 +26,9 @@ Service errors:
 | UNEXPECTED_ERROR | - |
 
 Service Configuration (cdoc-service-core.properties):
+
 | Key | Description |
-| ------------- | ----------- |
+| :--- | :--- |
 | cdoc.service.sk.ldap.url | SK LDAP location |
 
 ### App
@@ -35,7 +37,8 @@ Spring Boot application for CDOC core service. Has /create-cdoc rest endpoint wh
 ### Client
 Spring Boot application consumer.
 
-Service Configuration (cdoc-service-core.properties):
+Service Configuration (cdoc-service-client.properties):
+
 | Key | Description |
-| ------------- | ----------- |
+| :--- | :--- |
 | cdoc.service.app.url | CDOC service application location |
