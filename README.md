@@ -35,7 +35,7 @@ Service Configuration (cdoc-service-core.properties):
 Spring Boot application for CDOC core service. Has /create-cdoc rest endpoint which accepts collection of recipients and files as input for CDOC container creation.
 
 ### Client
-Spring Boot application consumer.
+CDOC service application consumer.
 
 Service Configuration (cdoc-service-client.properties):
 
