@@ -2,7 +2,7 @@ subprojects {
   apply plugin: 'java'
 
   group = 'com.nortal.cdoc'
-  version = 0.2
+  version = 0.3
   sourceCompatibility = 1.8
 
   task jarSources(type:Jar){

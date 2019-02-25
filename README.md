@@ -42,3 +42,6 @@ Service Configuration (cdoc-service-client.properties):
 | Key | Description |
 | :--- | :--- |
 | cdoc.service.app.url | CDOC service application location |
+| cdoc.service.connect.timeout | Application connect timeout - default 0 |
+| cdoc.service.read.timeout | Application read timeout - default 0 |
+| cdoc.service.buffer.request | Buffer application requests - default true [issue](https://jira.spring.io/si/jira.issueviews:issue-html/SPR-16582/SPR-16582.html) |

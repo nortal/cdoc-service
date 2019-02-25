@@ -1,8 +1,9 @@
 dependencies {
   compile project(':cdoc-service-common')
-  compile('org.springframework:spring-context:5.1.4.RELEASE')
-  compile('org.springframework:spring-web:5.1.4.RELEASE')
-  compile('com.fasterxml.jackson.core:jackson-databind:2.9.8')
+  compileOnly('org.springframework:spring-context:5.1.4.RELEASE')
+  compileOnly('org.springframework:spring-web:5.1.4.RELEASE')
+  compileOnly('com.fasterxml.jackson.core:jackson-databind:2.9.8')
+  compileOnly('org.apache.httpcomponents:httpclient:4.3')
   testCompile('junit:junit:4.12')
   testCompile('org.springframework:spring-test:5.1.4.RELEASE')
 }
