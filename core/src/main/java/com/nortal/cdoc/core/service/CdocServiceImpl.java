@@ -10,8 +10,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openeid.cdoc4j.CDOC11Builder;
@@ -47,8 +45,8 @@ public class CdocServiceImpl implements CdocService {
     ByteArrayOutputStream cdocContent = new ByteArrayOutputStream();
     try {
       CDOCBuilder cdocBuilder = CDOC11Builder.defaultVersion();
-      for (String recipent : data.getRecipents()) {
-        cdocBuilder.withRecipient(getRecipentCert(recipent));
+      for (String recipient : data.getRecipents()) {
+        cdocBuilder.withRecipient(getRecipientCert(recipient));
       }
       cdocBuilder.withDataFiles(getDataFiles(data));
       cdocBuilder.buildToOutputStream(cdocContent);
@@ -60,30 +58,36 @@ public class CdocServiceImpl implements CdocService {
     return new CdocServiceFile(null, cdocContent.toByteArray());
   }
 
-  private ByteArrayInputStream getRecipentCert(String recipent) {
-    LdapQuery query =
-        LdapQueryBuilder.query().base(LdapNameBuilder.newInstance().add("dc",
-                                                                        "ESTEID").add("o",
-                                                                                      "Identity card of Estonian citizen").add("ou",
-                                                                                                                               "Authentication").build()).attributes("userCertificate;binary").filter("serialNumber=PNOEE-{0}",
-                                                                                                                                                                                                      recipent);
-
-    List<ByteArrayInputStream> certs = cdocLdapTemplate.search(query, new AttributesMapper<ByteArrayInputStream>() {
-      @Override
-      public ByteArrayInputStream mapFromAttributes(Attributes attributes) throws NamingException {
-        return new ByteArrayInputStream((byte[]) attributes.get("userCertificate;binary").get());
-      }
-    });
+  private ByteArrayInputStream getRecipientCert(String recipient) {
+    List<ByteArrayInputStream> certs = getRecipentCerts(recipient, "Identity card of Estonian citizen");
+    if (CollectionUtils.isEmpty(certs)) {
+      certs = getRecipentCerts(recipient, "Residence card of temporary residence citizen");
+    }
 
     if (CollectionUtils.isEmpty(certs)) {
       throw new CdocServiceException(CdocServiceErrorCode.INVALID_CDOC_RECIPIENT,
-                                     String.format("could not find cert for recipent %s", recipent));
+              String.format("could not find cert for recipient %s", recipient));
     }
+
     if (certs.size() > 1) {
       throw new CdocServiceException(CdocServiceErrorCode.INVALID_CDOC_RECIPIENT,
-                                     String.format("found multiple certs for recipent %s", recipent));
+              String.format("found multiple certs for recipient %s", recipient));
     }
+
     return certs.get(0);
+  }
+
+  private List<ByteArrayInputStream> getRecipentCerts(String recipient, String valueOfAttributeO) {
+    LdapQuery query =
+        LdapQueryBuilder.query().base(LdapNameBuilder.newInstance()
+                .add("dc", "ESTEID")
+                .add("o", valueOfAttributeO)
+                .add("ou", "Authentication")
+                .build())
+                .attributes("userCertificate;binary").filter("serialNumber=PNOEE-{0}", recipient);
+
+    return cdocLdapTemplate.search(query, (AttributesMapper<ByteArrayInputStream>) attributes
+            -> new ByteArrayInputStream((byte[]) attributes.get("userCertificate;binary").get()));
   }
 
   private List<DataFile> getDataFiles(CdocServiceData data) {
